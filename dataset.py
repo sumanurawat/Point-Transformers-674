@@ -25,6 +25,13 @@ class ModelNetDataLoader(Dataset):
             shape_ids['train'] = [line.rstrip() for line in open(os.path.join(self.root, 'modelnet40_train.txt'))]
             shape_ids['test'] = [line.rstrip() for line in open(os.path.join(self.root, 'modelnet40_test.txt'))]
 
+        # delete me
+        print('printing shape ids')
+        print(len(shape_ids['train']))
+        print(len(shape_ids['test']))
+        shape_ids['train'] = shape_ids['train'][:500]
+        # delete me
+
         assert (split == 'train' or split == 'test')
         shape_names = ['_'.join(x.split('_')[0:-1]) for x in shape_ids[split]]
         # list of (shape_name, shape_txt_file_path) tuple
