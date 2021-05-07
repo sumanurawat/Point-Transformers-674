@@ -13,8 +13,10 @@ import importlib
 import shutil
 import hydra
 import omegaconf
+from pruning_utils import prune_model
 
 device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
+
 
 def test(model, loader, num_class=10):
     mean_correct = []
@@ -40,6 +42,7 @@ def test(model, loader, num_class=10):
 
 @hydra.main(config_path='config', config_name='config')
 def main(args):
+    os.environ['KMP_DUPLICATE_LIB_OK'] = 'True'
     omegaconf.OmegaConf.set_struct(args, False)
 
     '''HYPER PARAMETER'''
@@ -54,21 +57,30 @@ def main(args):
 
     '''DATA LOADING'''
     logger.info('Load dataset ...')
-    #DATA_PATH = hydra.utils.to_absolute_path('modelnet40_normal_resampled/')
     DATA_PATH = '/content/drive/MyDrive/modelnet40_normal_resampled/'
+    #DATA_PATH = hydra.utils.to_absolute_path('modelnet40_normal_resampled/')
+    # DATA_PATH = '/Users/sumanurawat/Desktop/Sem1/IVC 674/project/modelnet40_normal_resampled'
 
     TRAIN_DATASET = ModelNetDataLoader(root=DATA_PATH, npoint=args.num_point, split='train',
                                        normal_channel=args.normal, modelnet10=args.modelnet10)
+
     TEST_DATASET = ModelNetDataLoader(root=DATA_PATH, npoint=args.num_point, split='test',
                                       normal_channel=args.normal, modelnet10=args.modelnet10)
     trainDataLoader = torch.utils.data.DataLoader(TRAIN_DATASET, batch_size=args.batch_size, shuffle=True,
                                                   num_workers=4)
     testDataLoader = torch.utils.data.DataLoader(TEST_DATASET, batch_size=args.batch_size, shuffle=False, num_workers=4)
 
+    print('printing train dataloader')
+
+    print(len(TRAIN_DATASET))
+    print(type(TRAIN_DATASET))
+    print(TRAIN_DATASET)
+
     '''MODEL LOADING'''
     args.num_class = 10
     args.input_dim = 6 if args.normal else 3
     shutil.copy(hydra.utils.to_absolute_path('Point-Transformers-674/models/{}/model.py'.format(args.model.name)), '.')
+    # shutil.copy(hydra.utils.to_absolute_path('models/{}/model.py'.format(args.model.name)), '.')
 
     classifier = getattr(importlib.import_module('models.{}.model'.format(args.model.name)), 'PointTransformer')(
         args).to(device)
@@ -100,6 +112,9 @@ def main(args):
     best_class_acc = 0.0
     best_epoch = 0
     mean_correct = []
+
+    # add condition to prune here
+    classifier = prune_model(classifier, args)
 
     '''TRANING'''
     logger.info('Start training...')
