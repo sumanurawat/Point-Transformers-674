@@ -69,12 +69,6 @@ def main(args):
                                                   num_workers=4)
     testDataLoader = torch.utils.data.DataLoader(TEST_DATASET, batch_size=args.batch_size, shuffle=False, num_workers=4)
 
-    print('printing train dataloader')
-
-    print(len(TRAIN_DATASET))
-    print(type(TRAIN_DATASET))
-    print(TRAIN_DATASET)
-
     '''MODEL LOADING'''
     args.num_class = 10
     args.input_dim = 6 if args.normal else 3

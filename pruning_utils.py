@@ -5,6 +5,7 @@ import torch
 
 def prune_transformer_block(transformer_block, args):
     pruning_amount = float(args.pruning_amount)
+    print('prune amount')
     print(pruning_amount)
     prune.ln_structured(transformer_block.fc1, name='weight', amount=pruning_amount, n=0, dim=0)
     prune.remove(transformer_block.fc1, 'weight')
@@ -23,6 +24,8 @@ def prune_transformer_block(transformer_block, args):
 
 def prune_model(model, args):
     pruning_style = args.pruning_style
+    print('prune pruning_style')
+    print(pruning_style)
     prune_layers = []
     if pruning_style == 'bottom':
         prune_layers = [1, 2]
