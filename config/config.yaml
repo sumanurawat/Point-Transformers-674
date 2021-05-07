@@ -10,7 +10,7 @@ seed: 42
 modelnet10: True
 
 # Structured pruning args
-pruning_style: bottom
+pruning_style: alternate
 pruning_amount: 0.75
 
 defaults:
