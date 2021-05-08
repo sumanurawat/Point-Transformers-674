@@ -107,7 +107,7 @@ def main(args):
     mean_correct = []
 
     # add condition to prune here
-    classifier = prune_model(classifier, args)
+    # classifier = prune_model(classifier, args)
 
     '''TRANING'''
     logger.info('Start training...')
