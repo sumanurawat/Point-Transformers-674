@@ -25,11 +25,11 @@ def prune_model(model, args):
     pruning_style = args.pruning_style
     prune_layers = []
     if pruning_style == 'bottom':
-        prune_layers = [1, 2]
+        prune_layers = [1, 2, 3]
     if pruning_style == ' alternate':
-        prune_layers = [2, 4]
+        prune_layers = [1, 3, 5]
     if pruning_style == 'top':
-        prune_layers = [4, 5]
+        prune_layers = [3, 4, 5]
     if pruning_style == 'mid':
         prune_layers = [2, 3, 4]
     if pruning_style == 'all':
