@@ -114,6 +114,7 @@ def main(args):
         logger.info('Epoch %d (%d/%s):' % (global_epoch + 1, epoch + 1, args.epoch))
 
         classifier.train()
+        classifier = prune_model(classifier, args)
         for batch_id, data in tqdm(enumerate(trainDataLoader, 0), total=len(trainDataLoader), smoothing=0.9):
             points, target = data
             points, target = points.to(device), target.to(device)
@@ -164,7 +165,7 @@ def main(args):
             global_epoch += 1
 
         # prune after every epoch
-        classifier = prune_model(classifier, args)
+        #classifier = prune_model(classifier, args)
         # print sparsity
         show_transformer_sparsity(classifier)
 
