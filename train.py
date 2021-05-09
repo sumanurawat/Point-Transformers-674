@@ -13,7 +13,7 @@ import importlib
 import shutil
 import hydra
 import omegaconf
-from pruning_utils import prune_model
+from pruning_utils import prune_model, show_transformer_sparsity
 
 device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
 
@@ -112,6 +112,7 @@ def main(args):
     for epoch in range(start_epoch, args.epoch):
         # add condition to prune here
         classifier = prune_model(classifier, args)
+        show_transformer_sparsity(classifier)
         logger.info('Epoch %d (%d/%s):' % (global_epoch + 1, epoch + 1, args.epoch))
 
         classifier.train()

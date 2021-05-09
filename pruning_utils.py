@@ -42,3 +42,22 @@ def prune_model(model, args):
                 module = prune_transformer_block(module, args)
                 list(model.modules())[idx] = module
     return model
+
+def get_sparsity(layer):
+    print(
+        "Sparsity in conv1.weight: {:.2f}%".format(
+            100. * float(torch.sum(layer.weight == 0))
+            / float(layer.weight.nelement())
+        )
+    )
+
+
+def show_transformer_sparsity(model):
+    for idx in range(len(list(model.modules()))):
+        module = list(model.modules())[idx]
+        if isinstance(module, models.Hengshuang.transformer.TransformerBlock):
+            print('\n\nTransformer block')
+            get_sparsity(module.fc1)
+            get_sparsity(module.fc2)
+            get_sparsity(module.fc_delta)
+            get_sparsity(module.fc_gamma)
