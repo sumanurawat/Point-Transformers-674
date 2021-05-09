@@ -35,6 +35,8 @@ def prune_model(model, args):
         prune_layers = [4, 5]
     if pruning_style == 'mid':
         prune_layers = [2, 3, 4]
+    if pruning_style == 'all':
+        prune_layers = [1, 2, 3, 4, 5]
     transformer_block_count = 0
     for idx in range(len(list(model.modules()))):
         module = list(model.modules())[idx]
