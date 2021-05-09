@@ -5,5 +5,5 @@ transformer_dim: 512
 name: Hengshuang
 
 # Structured pruning args
-pruning_style: alternate
-pruning_amount: 0.75
+pruning_style: mid
+pruning_amount: 0.50
