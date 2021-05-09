@@ -106,12 +106,12 @@ def main(args):
     best_epoch = 0
     mean_correct = []
 
-    # add condition to prune here
-    classifier = prune_model(classifier, args)
 
     '''TRANING'''
     logger.info('Start training...')
     for epoch in range(start_epoch, args.epoch):
+        # add condition to prune here
+        classifier = prune_model(classifier, args)
         logger.info('Epoch %d (%d/%s):' % (global_epoch + 1, epoch + 1, args.epoch))
 
         classifier.train()
