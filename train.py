@@ -138,6 +138,11 @@ def main(args):
         train_instance_acc = np.mean(mean_correct)
         logger.info('Train Instance Accuracy: %f' % train_instance_acc)
 
+        # prune after every epoch
+        classifier = prune_model(classifier, args)
+        # print sparsity
+        show_transformer_sparsity(classifier)
+
         with torch.no_grad():
             instance_acc, class_acc = test(classifier.eval(), testDataLoader)
 
@@ -164,10 +169,8 @@ def main(args):
                 torch.save(state, savepath)
             global_epoch += 1
 
-        # prune after every epoch
-        #classifier = prune_model(classifier, args)
-        # print sparsity
-        show_transformer_sparsity(classifier)
+
+
 
     logger.info('End of training...')
     print('Final model sparsity of fully connected layers of Transformer blocks:')
