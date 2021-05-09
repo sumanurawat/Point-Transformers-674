@@ -1,6 +1,7 @@
 import models
 from torch.nn.utils import prune
 import torch
+import statistics
 
 
 def prune_transformer_block(transformer_block, args):
@@ -44,20 +45,16 @@ def prune_model(model, args):
     return model
 
 def get_sparsity(layer):
-    print(
-        "Sparsity in conv1.weight: {:.2f}%".format(
-            100. * float(torch.sum(layer.weight == 0))
-            / float(layer.weight.nelement())
-        )
-    )
+    return 100. * float(torch.sum(layer.weight == 0)) / float(layer.weight.nelement())
+
+
 
 
 def show_transformer_sparsity(model):
+    sparsity_list = []
     for idx in range(len(list(model.modules()))):
         module = list(model.modules())[idx]
         if isinstance(module, models.Hengshuang.transformer.TransformerBlock):
-            print('\n\nTransformer block')
-            get_sparsity(module.fc1)
-            get_sparsity(module.fc2)
-            get_sparsity(module.fc_delta)
-            get_sparsity(module.fc_gamma)
+            sparsity_list.append(get_sparsity(module.fc1))
+            sparsity_list.append(get_sparsity(module.fc2))
+    print("Current model sparsity : {:.2f}%".format(statistics.mean(sparsity_list)))

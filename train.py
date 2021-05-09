@@ -111,8 +111,6 @@ def main(args):
     logger.info('Start training...')
     for epoch in range(start_epoch, args.epoch):
         # add condition to prune here
-        classifier = prune_model(classifier, args)
-        show_transformer_sparsity(classifier)
         logger.info('Epoch %d (%d/%s):' % (global_epoch + 1, epoch + 1, args.epoch))
 
         classifier.train()
@@ -165,7 +163,14 @@ def main(args):
                 torch.save(state, savepath)
             global_epoch += 1
 
+        # prune after every epoch
+        classifier = prune_model(classifier, args)
+        # print sparsity
+        show_transformer_sparsity(classifier)
+
     logger.info('End of training...')
+    print('Final model sparsity of fully connected layers of Transformer blocks:')
+    show_transformer_sparsity(classifier)
 
 
 if __name__ == '__main__':
